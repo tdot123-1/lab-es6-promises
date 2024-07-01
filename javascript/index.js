@@ -1,33 +1,64 @@
-// This will print in the wrong order.
-// We added it as an example and to test that the arrays from data.js are loaded
+// general purpose function to make any dish using async/await
+// use name of dish as string && name of array of steps
+const makeDish = async(dishNameStr, dishStepsArr) => {
 
-// 🚨🚨🚨 Comment out the below code before you start working on the code
+  // change final step for each dish
+  let finalStep;
 
-// Out of sync
-/*
-  getInstruction("mashedPotatoes", 0, (step1) => {
-    document.querySelector("#mashedPotatoes").innerHTML += `<li>${step1}</li>`;
-  }, (error) => console.log(error));
-  
-  getInstruction("mashedPotatoes", 1, (step2) => {
-    document.querySelector("#mashedPotatoes").innerHTML += `<li>${step2}</li>`;
-  }, (error) => console.log(error));
-  
-  getInstruction("mashedPotatoes", 2, (step3) => {
-    document.querySelector("#mashedPotatoes").innerHTML += `<li>${step3}</li>`;
-  }, (error) => console.log(error));
-  
-  getInstruction("mashedPotatoes", 3, (step4) => {
-    document.querySelector("#mashedPotatoes").innerHTML += `<li>${step4}</li>`;
-  }, (error) => console.log(error));
-  
-  getInstruction("mashedPotatoes", 4, (step5) => {
-    document.querySelector("#mashedPotatoes").innerHTML += `<li>${step5}</li>`;
-    document.querySelector("#mashedPotatoesImg").removeAttribute("hidden");
-  }, (error) => console.log(error));
-*/
+  switch (dishNameStr) {
+    case "mashedPotatoes":
+      finalStep = "Mashed potatoes are ready!";
+      break;
+    case "steak":
+      finalStep = "Steak is ready!";
+      break;
+    case "brusselsSprouts":
+      finalStep = "Brussels sprouts are ready!";
+      break;
+    case "broccoli":
+      finalStep = "Broccoli is ready!";
+      break;
+    default:
+      finalStep = `${dishNameStr} is ready!`;
+  }
+
+  try {
+    // using await Promise.all() to resolve array of all promises
+    const steps = await Promise.all(dishStepsArr.map((_, index) => 
+      obtainInstruction(dishNameStr, index)));
+
+    // add the value for each promise as <li> to correct list
+    steps.forEach(step => 
+      (document.querySelector(`#${dishNameStr}`).innerHTML += `<li>${step}</li>`));
+
+
+    // using async/await to resolve each promise one after the other
+    /*
+    // resolve promise for each step in array, add value as <li> to correct list
+    for (let i = 0; i < dishStepsArr.length; i += 1) {
+      const step = await obtainInstruction(`${dishNameStr}`, i);
+      document.querySelector(`#${dishNameStr}`).innerHTML += `<li>${step}</li>`;
+    }
+    */
+
+    // add final step, display image
+    document.querySelector(`#${dishNameStr}`).innerHTML += `<li>${finalStep}</li>`;
+    document.getElementById(`${dishNameStr}Img`).hidden = false;
+
+  }
+  catch (error) {
+    console.log(error)
+  }
+}
+
+makeDish("mashedPotatoes", mashedPotatoes);
+makeDish("steak", steak);
+makeDish("brusselsSprouts", brusselsSprouts);
+makeDish("broccoli", broccoli);
+
 
 // Iteration 1 - using callbacks
+/*
 getInstruction('mashedPotatoes', 0, (step0) => {
   document.querySelector("#mashedPotatoes").innerHTML += `<li>${step0}</li>`;
 
@@ -55,6 +86,7 @@ getInstruction('mashedPotatoes', 0, (step0) => {
   }, (error) => console.log(error));
   
 }, (error) => console.log(error));
+
 
 // Iteration 2 - using promises
 obtainInstruction('steak', 0)
@@ -93,6 +125,7 @@ obtainInstruction('steak', 0)
   })
   .catch((error) => console.log(error)) 
 
+
 // Iteration 3 using async/await
 const makeBroccoli = async() => {
   try {
@@ -127,9 +160,8 @@ const makeBroccoli = async() => {
 makeBroccoli();
 
 // Bonus 2 - Promise all
-
-
 const handlePromiseAll = async() => {
+
   const steps = brusselsSprouts.map((step, index) => obtainInstruction("brusselsSprouts", index));
 
   try {
@@ -146,3 +178,4 @@ const handlePromiseAll = async() => {
 }
 
 handlePromiseAll();
+*/
