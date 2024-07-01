@@ -127,4 +127,22 @@ const makeBroccoli = async() => {
 makeBroccoli();
 
 // Bonus 2 - Promise all
-// ...
+
+
+const handlePromiseAll = async() => {
+  const steps = brusselsSprouts.map((step, index) => obtainInstruction("brusselsSprouts", index));
+
+  try {
+    const values = await Promise.all(steps);
+    values.forEach(value => {
+      document.querySelector("#brusselsSprouts").innerHTML += `<li>${value}</li>`;
+    });
+    document.querySelector("#brusselsSprouts").innerHTML += `<li>Brussels sprouts are ready!</li>`;
+    document.getElementById("brusselsSproutsImg").hidden = false;
+  }
+  catch(error) {
+    console.log(error);
+  }
+}
+
+handlePromiseAll();
